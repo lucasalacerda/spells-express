@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var spellsSchema = mongoose.Schema({
+const Spell = mongoose.Schema({
     title: {
         type: String,
         unique: true,
@@ -28,4 +28,4 @@ var spellsSchema = mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('spellsSchema', spellsSchema);
+module.exports = mongoose.model('Spell', Spell);

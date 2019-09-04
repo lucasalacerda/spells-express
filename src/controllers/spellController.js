@@ -1,4 +1,13 @@
-var Spells = require('../models/spells');
+var Spell = require('../models/spell');
+
+exports.getAll = (req, res, next) => {
+    Spell.find({},(err, spells) => {
+        if(err){
+            res.status(500).send(err);
+        }
+        res.json(spells); 
+    });
+}
 
 exports.create = (req, res, next) => {
     var spell = {
@@ -9,7 +18,7 @@ exports.create = (req, res, next) => {
         img: req.body.img,
     }
 
-    Spells.create(spell, (err, spell) => {
+    Spell.create(spell, (err, spell) => {
         if(err) {
             res.json({
                 error: err
