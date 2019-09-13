@@ -2,32 +2,49 @@ var User = require('../models/user');
 var bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
 
+exports.verifyToken = (req, res, next) => {
+    const token = req.get('x-auth-token');
+    if (!token) res.status(403).send("Please insert token");
+    else {
+        jwt.verify(token, '$en@c', (err, userId) => {
+            if (err) {
+                res.status(401).send(err);
+            }
+            else {
+                next();
+            }
+        });
+    }
+}
+
 exports.authenticate = (req, res, next) => {
     const login = {
         email: req.body.email,
         password: req.body.password
     }
 
-    User.findOne({ email: login.email }, function (err, userInfo) {
+    User.findOne({ email: login.email }, function (err, user) {
         if (err) {
             next(err);
-        } else {
-            if (bcrypt.compareSync(login.password, userInfo.password)) {
+        }
+        else {
+            if (bcrypt.compareSync(login.password, user.password)) {
                 const token = jwt.sign(
-                    { id: userInfo._id },
-                    req.app.get('secretKey'),
+                    { id: user.id },
+                    '$en@c',
+                    // req.app.get('secretKey'),
                     { expiresIn: '1h' }
                 );
-                res.json({
-                    status: "success",
-                    message: "user found!!!",
+                res.status(200).json({
+                    status: "OK",
                     data: {
-                        user: userInfo, token: token
+                        token: token
                     }
                 });
-            } else {
+            }
+            else {
                 res.json({
-                    status: "error",
+                    status: "NOK",
                     message: "Invalid email/password!!!",
                     data: null
                 });

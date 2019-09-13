@@ -25,7 +25,8 @@ exports.create = (req, res, next) => {
             });
         }
         res.json({
-            message: "Spell created successfully!"
+            message: "Spell created successfully!",
+            spell
         });
     });
 }

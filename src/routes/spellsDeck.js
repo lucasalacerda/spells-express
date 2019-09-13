@@ -3,7 +3,7 @@ var router = express.Router();
 
 var spellController = require('../controllers/spellController');
 
-router.get('/spells', spellController.getAll);
-router.post('/spells', spellController.create);
+router.get('/spell', spellController.getAll);
+router.post('/spell', spellController.create);
 
 module.exports = router;

@@ -8,7 +8,8 @@ router.use(function timeLog(req, res, next) {
 });
 
 router.get('/', (req, res) => {
-    res.redirect('/api/spellsDeck/spells');
+
+    res.redirect('/api/');
   });
 
   module.exports = router;
