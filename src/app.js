@@ -4,11 +4,11 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const timeout = require('connect-timeout')
-const conf = require('../conf');
+require('dotenv').config();
 
-app.use(morgan('combined'))
+app.use(morgan('combined'));
 
-const spellsUri = `mongodb+srv://${conf.mongo.username}:${conf.mongo.password}@${conf.mongo.url}`;
+const spellsUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}`;
 mongoose.connect(spellsUri, 
   { useNewUrlParser: true }
 );
