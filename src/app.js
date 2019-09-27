@@ -3,61 +3,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-// const MongoClient = require('mongodb').MongoClient;
-
-
-const extendTimeoutMiddleware = (req, res, next) => {
-  const space = ' ';
-  let isFinished = false;
-  let isDataSent = false;
-
-  // Only extend the timeout for API requests
-  if (!req.url.includes('/api')) {
-    next();
-    return;
-  }
-
-  res.once('finish', () => {
-    isFinished = true;
-  });
-
-  res.once('end', () => {
-    isFinished = true;
-  });
-
-  res.once('close', () => {
-    isFinished = true;
-  });
-
-  res.on('data', (data) => {
-    // Look for something other than our blank space to indicate that real
-    // data is now being sent back to the client.
-    if (data !== space) {
-      isDataSent = true;
-    }
-  });
-
-  const waitAndSend = () => {
-    setTimeout(() => {
-      // If the response hasn't finished and hasn't sent any data back....
-      if (!isFinished && !isDataSent) {
-        // Need to write the status code/headers if they haven't been sent yet.
-        if (!res.headersSent) {
-          res.writeHead(202);
-        }
-
-        res.write(space);
-
-        // Wait another 15 seconds
-        waitAndSend();
-      }
-    }, 15000);
-  };
-
-  waitAndSend();
-  next();
-};
-
+var timeout = require('connect-timeout')
 
 app.use(morgan('combined'))
 
@@ -76,15 +22,18 @@ const spellsDeck = require('./routes/spellsDeck');
 
 //TODO: BOTAR A VALIDAÇÃO NO VERIFY
 app.use('/api/spell', authController.verifyToken);
-
+app.use(timeout('10s'))
 app.use(bodyParser.json());
+app.use(haltOnTimedout)
 
 app.use('/', index);
 app.use('/api', authRoute);
 app.use('/api', userRoute);
 app.use('/api', spellsDeck);
-app.use(extendTimeoutMiddleware);
 
+function haltOnTimedout (req, res, next) {
+  if (!req.timedout) next()
+}
 
 app.listen(port, () => {
     console.log('Listen to port 3000')
