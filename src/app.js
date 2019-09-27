@@ -3,11 +3,12 @@ const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
-var timeout = require('connect-timeout')
+const timeout = require('connect-timeout')
+const conf = require('../conf');
 
 app.use(morgan('combined'))
 
-const spellsUri = 'mongodb+srv://lucasalacerda:7894512@spells-mxwh5.gcp.mongodb.net/spellsdb?retryWrites=true&w=majority';
+const spellsUri = `mongodb+srv://${conf.mongo.username}:${conf.mongo.password}@${conf.mongo.url}`;
 mongoose.connect(spellsUri, 
   { useNewUrlParser: true }
 );
@@ -22,6 +23,8 @@ const spellsDeck = require('./routes/spellsDeck');
 
 //TODO: BOTAR A VALIDAÇÃO NO VERIFY
 app.use('/api/spell', authController.verifyToken);
+app.use('/api/user', authController.verifyToken);
+
 app.use(timeout('10s'))
 app.use(bodyParser.json());
 app.use(haltOnTimedout)
