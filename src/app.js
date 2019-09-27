@@ -22,7 +22,7 @@ const userRoute = require('./routes/user');
 const spellsDeck = require('./routes/spellsDeck');
 
 //TODO: BOTAR A VALIDAÇÃO NO VERIFY
-// app.use('/api/spell', authController.verifyToken);
+app.use('/api/spell', authController.verifyToken);
 
 app.use(bodyParser.json());
 
