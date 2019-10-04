@@ -6,8 +6,22 @@ exports.getAll = (req, res, next) => {
             res.status(500).send(err);
         }
         res.json(spells); 
+    })
+    .populate('class', 'className -_id')
+    .select('title description level img class');
+}
+
+//TODO: Resolver problema com Object Id
+
+exports.getSpellById = (req, res, next) => {
+    Spell.findById({id: req.params.id}, (err, spell) => {
+        if (err) {
+            res.status(412).send(err);
+        }
+        res.json(spell);
     });
 }
+
 
 exports.create = (req, res, next) => {
     var spell = {

@@ -20,6 +20,8 @@ const index = require('./routes/index');
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
 const spellsDeck = require('./routes/spellsDeck');
+const classRoute = require('./routes/class');
+
 
 //TODO: BOTAR A VALIDAÇÃO NO VERIFY
 app.use('/api/spell', authController.verifyToken);
@@ -33,6 +35,7 @@ app.use('/', index);
 app.use('/api', authRoute);
 app.use('/api', userRoute);
 app.use('/api', spellsDeck);
+app.use('/api', classRoute);
 
 function haltOnTimedout (req, res, next) {
   if (!req.timedout) next()
