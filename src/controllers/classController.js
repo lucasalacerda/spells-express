@@ -1,11 +1,11 @@
 var Class = require('../models/class');
 
 exports.getAll = (req, res, next) => {
-    Class.find({},(err, classes) => {
+    Class.find({},(err, classList) => {
         if(err){
             res.status(500).send(err);
         }
-        res.json(classes); 
+        res.json(classList); 
     })
 }
 

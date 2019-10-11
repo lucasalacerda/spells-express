@@ -1,30 +1,38 @@
 var Spell = require('../models/spell');
 
-exports.getAll = (req, res, next) => {
-    Spell.find({},(err, spells) => {
-        if(err){
-            res.status(500).send(err);
-        }
-        res.json(spells); 
-    })
-    .populate('class', 'className -_id')
-    .select('title description level img class');
+exports.getAll = async (req, res, next) => {
+    let spells;
+
+    try {
+        spells = await Spell
+        .find({})
+        .populate('class', 'className -_id');
+    } catch(err) {
+        res.status(412).send(err);
+    }
+
+    res.json(spells);
 }
 
-//TODO: Resolver problema com Object Id
-
-exports.getSpellById = (req, res, next) => {
-    Spell.findById({id: req.params.id}, (err, spell) => {
-        if (err) {
-            res.status(412).send(err);
-        }
-        res.json(spell);
-    });
+exports.getSpellById = async (req, res, next) => {
+    let spell;
+    
+    try {
+        spell = await 
+            Spell
+            .findById(req.params.id)
+            .populate('class')
+    } catch(err) {
+        res.status(412).send({
+            errorMessage: "Id does not exist",
+            exception: err
+        });
+    }
+    res.json(spell);
 }
 
-
-exports.create = (req, res, next) => {
-    var spell = {
+exports.create = async (req, res, next) => {
+    const spell = {
         title: req.body.title,
         description: req.body.description,
         level: req.body.level,
@@ -32,15 +40,15 @@ exports.create = (req, res, next) => {
         img: req.body.img,
     }
 
-    Spell.create(spell, (err, spell) => {
-        if(err) {
-            res.json({
-                error: err
-            });
-        }
-        res.json({
-            message: "Spell created successfully!",
-            spell
-        });
+    let spellCreated;
+
+    try {
+        spellCreated = await Spell.create(spell);
+    } catch(err) {
+        res.status(412).send(err);
+    }
+    res.status(201).json({
+        message: "Spell created successfully!",
+        spellCreated
     });
 }

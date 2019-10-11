@@ -19,7 +19,7 @@ const authController = require('./controllers/authController');
 const index = require('./routes/index');
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
-const spellsDeck = require('./routes/spellsDeck');
+const spellsDeck = require('./routes/spell');
 const classRoute = require('./routes/class');
 
 
