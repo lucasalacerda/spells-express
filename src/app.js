@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const timeout = require('connect-timeout')
@@ -27,6 +28,7 @@ const classRoute = require('./routes/class');
 app.use('/api/spell', authController.verifyToken);
 app.use('/api/user', authController.verifyToken);
 
+app.use(cors());
 app.use(timeout('10s'))
 app.use(bodyParser.json());
 app.use(haltOnTimedout)
