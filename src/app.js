@@ -25,8 +25,8 @@ const classRoute = require('./routes/class');
 
 
 //TODO: BOTAR A VALIDAÇÃO NO VERIFY
-app.use('/api/spell', authController.verifyToken);
-app.use('/api/user', authController.verifyToken);
+// app.use('/api/spell', authController.verifyToken);
+// app.use('/api/user', authController.verifyToken);
 
 app.use(cors());
 app.use(timeout('10s'))
