@@ -29,6 +29,7 @@ exports.authenticate = (req, res, next) => {
     User.findOne({ email: login.email }, function (err, user) {
         if (err) {
             next(err);
+            console.log(err);
         }
         else {
             if (bcrypt.compareSync(login.password, user.password)) {

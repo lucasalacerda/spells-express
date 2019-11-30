@@ -22,7 +22,14 @@ const Character = mongoose.Schema({
     create_date: {
         type: Date,
         default: Date.now
-    }
+    },
+    spells: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Spell',
+            required: true
+        }
+    ]   
 });
 
 module.exports = mongoose.model('Character', Character);

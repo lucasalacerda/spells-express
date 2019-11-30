@@ -7,7 +7,6 @@ router.route('/user')
     .post(userController.register)
     .get(userController.getAll);
 
-//TODO: melhorar para que não precise do /search. Fazer tratamento na funcao
 router.route('/user/search')
     .get(userController.getUserByEmail);
 

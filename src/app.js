@@ -9,7 +9,9 @@ require('dotenv').config();
 
 app.use(morgan('combined'));
 
-const spellsUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}`;
+// const spellsUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}`;
+const spellsUri = `mongodb://localhost:27017/spells`;
+
 mongoose.connect(spellsUri, 
   { useNewUrlParser: true }
 );
@@ -22,6 +24,7 @@ const authRoute = require('./routes/auth');
 const userRoute = require('./routes/user');
 const spellsDeck = require('./routes/spell');
 const classRoute = require('./routes/class');
+const characterRoute = require('./routes/character');
 
 
 //TODO: BOTAR A VALIDAÇÃO NO VERIFY
@@ -38,6 +41,7 @@ app.use('/api', authRoute);
 app.use('/api', userRoute);
 app.use('/api', spellsDeck);
 app.use('/api', classRoute);
+app.use('/api', characterRoute);
 
 function haltOnTimedout (req, res, next) {
   if (!req.timedout) next()

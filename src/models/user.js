@@ -21,6 +21,11 @@ const User = mongoose.Schema({
         type: String,
         required: true
     },
+    chacarters: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Character',
+        required: false
+    }],
     img: {
         type: String,
         required: false
