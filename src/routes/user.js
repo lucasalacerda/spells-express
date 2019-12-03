@@ -3,11 +3,15 @@ var router = express.Router();
 
 var userController = require('../controllers/userController');
 
-router.route('/user')
-    .post(userController.register)
+router.route('/users')
+    .post(userController.createUser)
     .get(userController.getAll);
 
-router.route('/user/search')
+router.route('/users/:id')
+    .put(userController.updateUser)
+    .delete(userController.removeUser);
+
+router.route('/users/search')
     .get(userController.getUserByEmail);
 
 module.exports = router;

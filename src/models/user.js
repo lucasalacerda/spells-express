@@ -7,6 +7,7 @@ const User = mongoose.Schema({
     },
     document: {
         type: String,
+        unique: true,
         required: true
     },
     age: {
@@ -15,13 +16,14 @@ const User = mongoose.Schema({
     },
     email: {
         type: String,
+        unique: true,
         required: true
     },
     password: {
         type: String,
         required: true
     },
-    chacarters: [{
+    characters: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Character',
         required: false

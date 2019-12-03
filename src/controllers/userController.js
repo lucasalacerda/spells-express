@@ -1,30 +1,62 @@
-var User = require('../models/user');
-var bcrypt = require('bcrypt');
+const User = require('../models/user');
+const bcrypt = require('bcrypt');
+const ObjectId = require('mongodb').ObjectID;
+const characterPopulate = require('../helpers/populateMongoose');
 
-exports.getAll = (req, res, next) => {
-    User.find({}, (err, users) => {
-        if (err) {
-            res.status(412).send(err);
-        }
-        res.json(users);
-    });
+exports.getAll = async (req, res, next) => {
+    let users;
+
+    try {
+        users = await User.find({})
+            .populate(characterPopulate);
+    } catch (err) {
+        res.status(422).send({
+            messageError: err
+        });
+    }
+    res.status(200).send(users);
 }
 
-exports.getUserByEmail = (req, res, next) => {
-    User.find({email: req.query.email}, (err, user) => {
-        if (err) {
-            res.status(412).send(err);
-        }
-        res.json(user);
-    });
+exports.getUserByEmail = async (req, res, next) => {
+    let user;
+    try {
+        user = await User.find({ email: req.query.email })
+            .populate(characterPopulate);
+    } catch (err) {
+        res.status(422).send({
+            messageError: err
+        });
+    }
+    res.status(200).json(user);
 }
 
-exports.register = (req, res, next) => {
+exports.updateUser = async (req, res, next) => {
+    let updatedUser;
 
-    var salt = bcrypt.genSaltSync(10)
-    var password = bcrypt.hashSync(req.body.password, salt)
+    try {
+        updatedUser = await User
+            .findOneAndUpdate({
+                _id: ObjectId(req.params.id)
+            }, req.body)
+            .populate(characterPopulate);
+    } catch (err) {
+        res.status(422).send({
+            messageError: err
+        });
+    }
 
-    var user = {
+    res.status(200).json({
+        user: updatedUser,
+    })
+
+}
+
+exports.createUser = async (req, res, next) => {
+    let userCreated;
+    let salt = bcrypt.genSaltSync(10)
+    let password = bcrypt.hashSync(req.body.password, salt)
+
+    let user = {
         name: req.body.name,
         document: req.body.document,
         age: req.body.age,
@@ -33,14 +65,35 @@ exports.register = (req, res, next) => {
         img: req.body.img
     }
 
-    User.create(user, (err, user, next) => {
-        if (err) {
-            res.status(412).json({
-                error: err
-            });
-        }
-        res.status(201).json({
-            message: "User register successfully!"
+    try {
+        userCreated = await User
+            .create(user)
+            .populate(characterPopulate);
+    } catch (err) {
+        res.status(422).send({
+            messageError: err
         });
+    }
+    res.status(201).json({
+        message: "User register successfully!",
+        user: userCreated
+    });
+}
+
+exports.removeUser = async (req, res, next) => {
+    let userRemoved;
+    try {
+        userRemoved = await User.findByIdAndRemove({
+            _id: ObjectId(req.params.id)
+        })
+        .populate(characterPopulate);
+    } catch(err) {
+        res.status(422).send({ 
+            messageError: err
+        });
+    }
+    res.status(200).json({
+        message: 'User deleted successfully!',
+        user: userRemoved
     });
 }

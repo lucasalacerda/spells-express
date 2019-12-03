@@ -35,15 +35,17 @@ exports.createCharacter = async (req, res, next) => {
         class: req.body.class,
         background: req.body.background,
         img: req.body.img,
-        spells: req.body.spells
+        spells: req.body.spells,
+        level: req.body.level
     };
 
     let characterCreated;
 
     try {
-        characterCreated = await Character.create(character)
-        .populate('class', 'className -_id')
-        .populate('spells', 'title -_id, description -_id');
+        characterCreated = await Character
+            .create(character)
+            .populate('class', 'className -_id')
+            .populate('spells', 'title -_id, description -_id');
     } catch(err) {
         res.status(422).send(err);
     }
@@ -55,11 +57,12 @@ exports.createCharacter = async (req, res, next) => {
 
 exports.updateCharacter = async (req, res, next) => {
     try {
-        characterUpdated = await Character.findOneAndUpdate({
-            _id: ObjectId(req.params.id)
-        }, req.body)
-        .populate('class', 'className -_id')
-        .populate('spells', 'title -_id, description -_id');
+        characterUpdated = await Character
+            .findOneAndUpdate({
+                _id: ObjectId(req.params.id)
+            }, req.body)
+            .populate('class', 'className -_id')
+            .populate('spells', 'title -_id, description -_id');
     } catch(err) {
         return res.status(422).send({ 
             message: err
@@ -80,7 +83,7 @@ exports.removeCharacter = async (req, res, next) => {
         .populate('spells', 'title -_id, description -_id');
     } catch(err) {
         return res.status(422).send({ 
-            message: err
+            messageError: err
         });
     }
     res.status(200).json({

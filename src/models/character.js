@@ -6,6 +6,10 @@ const Character = mongoose.Schema({
         required: true,
         unique: true
     },
+    level: {
+        type: Number,
+        required: true,
+    },
     class: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Class',
