@@ -1,62 +1,64 @@
-var User = require('../models/user');
-var bcrypt = require('bcrypt');
-var jwt = require('jsonwebtoken');
+const User = require('../models/user');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const populateCharacter = require('../helpers/populateMongoose');
 
 exports.verifyToken = (req, res, next) => {
     const token = req.get('x-auth-token');
-    if (!token) res.status(403).send("Please insert token");
+    if (!token) res.status(403).send("Please insert the token.");
     else {
-        console.log(token)
         jwt.verify(token, "$en@c", (err, id) => {
-            console.log(id)
             if (err) {
                 res.status(401).send(err);
             }
             else {
-                console.log(id)
                 next();
             }
         });
     }
 }
 
-exports.authenticate = (req, res, next) => {
+exports.authenticate = async (req, res, next) => {
     const login = {
         email: req.body.email,
         password: req.body.password
     }
 
-    User.findOne({ email: login.email }, function (err, user) {
-        if (err) {
-            next(err);
-            console.log(err);
-        }
-        else {
-            if (bcrypt.compareSync(login.password, user.password)) {
+    let userFound;
+
+    try {
+        userFound = await User.findOne({ email: login.email }).populate(populateCharacter);
+        if (userFound !== null) {
+            if (bcrypt.compareSync(login.password, userFound.password)) {
                 const token = jwt.sign(
-                    { id: user.id },
-                    "$en@c",
-                    { expiresIn: '1h' }
+                    {id: userFound.id}, '$en@c', {expiresIn: '1h'}
                 );
                 res.status(200).json({
-                    status: "OK",
                     data: {
                         token: token
+                    },
+                    user: {
+                        name: userFound.name,
+                        document: userFound.document,
+                        age: userFound.age,
+                        email: userFound.email,
+                        img: userFound.img,
+                        characters: userFound.characters
                     }
                 });
             }
             else {
-                res.json({
-                    status: "NOK",
-                    message: "Invalid email/password!!!",
-                    data: null
+                res.status(422).json({
+                    messageError: 'Invalid email/password.',
                 });
-
-                jwt.sign({
-                    exp: Math.floor(Date.now() / 1000) + (60 * 60),
-                    data: login.email
-                }, '$en@c');
             }
         }
-    });
+        else {
+            res.status(422).json({
+                messageError: 'User not found.'
+            })
+        }
+    } catch (err) {
+        next(err);
+    }
 }
