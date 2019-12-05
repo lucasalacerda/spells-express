@@ -8,7 +8,6 @@ exports.getAll = async (req, res, next) => {
         characters = await Character
             .find({})
             .populate('class', 'className -_id')
-            .populate('spells', 'title -_id, description -_id');
     } catch(err) {
         res.status(422).send(err);
     }
