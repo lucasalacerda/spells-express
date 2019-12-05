@@ -7,12 +7,14 @@ exports.verifyToken = (req, res, next) => {
     const token = req.get('x-auth-token');
     if (!token) res.status(403).send("Please insert the token.");
     else {
-        jwt.verify(token, "$en@c", (err, id) => {
+        jwt.verify(token, "$en@c", (err, user) => {
             if (err) {
                 res.status(401).send(err);
             }
             else {
-                next();
+                res.status(200).json({
+                    user: user
+                })
             }
         });
     }
@@ -28,7 +30,6 @@ exports.authenticate = async (req, res, next) => {
 
     try {
         userFound = await User.findOne({ email: login.email })
-            .populate(populateCharacter);
         if (userFound !== null) {
             if (bcrypt.compareSync(login.password, userFound.password)) {
                 const token = jwt.sign(
@@ -37,14 +38,6 @@ exports.authenticate = async (req, res, next) => {
                 res.status(200).json({
                     data: {
                         token: token
-                    },
-                    user: {
-                        name: userFound.name,
-                        document: userFound.document,
-                        age: userFound.age,
-                        email: userFound.email,
-                        img: userFound.img,
-                        characters: userFound.characters
                     }
                 });
             }

@@ -30,6 +30,19 @@ exports.getUserByEmail = async (req, res, next) => {
     res.status(200).json(user);
 }
 
+exports.getUserById = async (req, res, next) => {
+    let user;
+    try {
+        user = await User.findById({ _id: ObjectId(req.params.id) })
+            .populate(characterPopulate);
+    } catch (err) {
+        res.status(422).send({
+            messageError: err
+        });
+    }
+    res.status(200).json(user);
+}
+
 exports.updateUser = async (req, res, next) => {
     let updatedUser;
 

@@ -1,12 +1,13 @@
 var Spell = require('../models/spell');
+const ObjectId = require('mongodb').ObjectID;
 
 exports.getAll = async (req, res, next) => {
     let spells;
 
     try {
         spells = await Spell
-        .find({})
-        .populate('class', 'className -_id');
+            .find({})
+            .populate('class', 'className -_id');
     } catch(err) {
         res.status(412).send(err);
     }
@@ -18,9 +19,8 @@ exports.getSpellById = async (req, res, next) => {
     let spell;
     
     try {
-        spell = await 
-            Spell
-            .findById(req.params.id)
+        spell = await Spell
+            .findById({ _id: ObjectId(req.params.id) })
             .populate('class')
     } catch(err) {
         res.status(412).send({

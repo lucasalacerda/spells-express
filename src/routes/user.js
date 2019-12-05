@@ -8,6 +8,7 @@ router.route('/users')
     .get(userController.getAll);
 
 router.route('/users/:id')
+    .get(userController.getUserById)
     .put(userController.updateUser)
     .delete(userController.removeUser);
 
