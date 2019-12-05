@@ -13,7 +13,7 @@ exports.verifyToken = (req, res, next) => {
             }
             else {
                 res.status(200).json({
-                    user: user
+                    user
                 })
             }
         });
