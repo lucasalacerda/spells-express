@@ -40,7 +40,7 @@ exports.getUserById = async (req, res, next) => {
             messageError: err
         });
     }
-    res.status(200).json(user);
+    res.status(200).json(user.populate(characterPopulate));
 }
 
 exports.updateUser = async (req, res, next) => {
@@ -59,7 +59,7 @@ exports.updateUser = async (req, res, next) => {
     }
 
     res.status(200).json({
-        user: updatedUser,
+        user: updatedUser.populate(characterPopulate),
     })
 
 }

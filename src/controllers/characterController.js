@@ -18,7 +18,7 @@ exports.getAll = async (req, res, next) => {
             }
         ])
     } catch(err) {
-        res.status(422).send(err);
+        res.status(422).json(err);
     }
     res.json(characters);
 }
