@@ -6,10 +6,21 @@ exports.getAll = async (req, res, next) => {
 
     try {
         characters = await Character
+
             .find({})
-            .populate('class', 'className -_id')
-            .populate('spells', 'title -_id, description -_id');
-    } catch(err) {
+            .populate({
+                
+                path: 'class',
+                model: 'Class',
+            })
+            .populate(
+                {
+                    path: 'spells',
+                    model: 'Spell',
+                }
+
+            );
+    } catch (err) {
         res.status(422).send(err);
     }
     res.json(characters);
@@ -20,10 +31,10 @@ exports.getCharacterById = async (req, res, next) => {
 
     try {
         characters = await Character
-            .findById({_id: ObjectId(req.params.id)})
+            .findById({ _id: ObjectId(req.params.id) })
             .populate('class', 'className -_id')
             .populate('spells', 'title -_id, description -_id');
-    } catch(err) {
+    } catch (err) {
         res.status(422).send(err);
     }
     res.json(characters);
@@ -46,7 +57,7 @@ exports.createCharacter = async (req, res, next) => {
             .create(character)
             .populate('class', 'className -_id')
             .populate('spells', 'title -_id, description -_id');
-    } catch(err) {
+    } catch (err) {
         res.status(422).send(err);
     }
     res.status(201).json({
@@ -63,8 +74,8 @@ exports.updateCharacter = async (req, res, next) => {
             }, req.body)
             .populate('class', 'className -_id')
             .populate('spells', 'title -_id, description -_id');
-    } catch(err) {
-        return res.status(422).send({ 
+    } catch (err) {
+        return res.status(422).send({
             message: err
         });
     }
@@ -79,10 +90,10 @@ exports.removeCharacter = async (req, res, next) => {
         characterDeleted = await Character.findByIdAndRemove({
             _id: ObjectId(req.params.id)
         })
-        .populate('class', 'className -_id')
-        .populate('spells', 'title -_id, description -_id');
-    } catch(err) {
-        return res.status(422).send({ 
+            .populate('class', 'className -_id')
+            .populate('spells', 'title -_id, description -_id');
+    } catch (err) {
+        return res.status(422).send({
             messageError: err
         });
     }

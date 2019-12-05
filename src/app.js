@@ -9,8 +9,8 @@ require('dotenv').config();
 
 app.use(morgan('combined'));
 
-const spellsUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}`;
-// const spellsUri = `mongodb://localhost:27017/spells`;
+// const spellsUri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}`;
+const spellsUri = `mongodb://localhost:27017/spells`;
 
 mongoose.connect(spellsUri, 
   { useNewUrlParser: true }

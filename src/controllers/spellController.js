@@ -16,19 +16,21 @@ exports.getAll = async (req, res, next) => {
 }
 
 exports.getSpellById = async (req, res, next) => {
-    let spell;
-    
+
+    let spell;    
     try {
-        spell = await Spell
-            .findById({ _id: ObjectId(req.params.id) })
-            .populate('class')
+        spell = await Spell.findById({ _id: ObjectId(req.params.id) })
+            .populate({
+                path: 'class',
+                model: 'Class'
+            });
     } catch(err) {
-        res.status(412).send({
+        res.status(422).send({
             errorMessage: "Id does not exist",
             exception: err
         });
     }
-    res.json(spell);
+    res.status(200).json(spell);
 }
 
 exports.create = async (req, res, next) => {
