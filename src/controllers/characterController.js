@@ -7,18 +7,16 @@ exports.getAll = async (req, res, next) => {
     try {
         characters = await Character
             .find({})
-            .populate({
-                populate: [
-                    { 
-                        path: 'class',
-                        model: 'Class',
-                    },
-                    { 
-                        path: 'spells',
-                        model: 'Spell',
-                    }
-                ]
-            })
+            .populate([
+            {
+                path: 'class',
+                model: 'Class'
+            },
+            {
+                path: 'spells',
+                model: 'Spell'
+            }
+        ])
     } catch(err) {
         res.status(422).send(err);
     }
