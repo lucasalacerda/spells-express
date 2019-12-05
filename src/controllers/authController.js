@@ -13,7 +13,9 @@ exports.verifyToken = (req, res, next) => {
             }
             else {
                 res.status(200).json({
-                    user
+                    id: user.id,
+                    iat: user.iat,
+                    exp: user.exp
                 })
             }
         });
