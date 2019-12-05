@@ -44,8 +44,6 @@ exports.createCharacter = async (req, res, next) => {
     try {
         characterCreated = await Character
             .create(character)
-            .populate('class', 'className -_id')
-            .populate('spells', 'title -_id, description -_id');
     } catch(err) {
         res.status(422).send(err);
     }
