@@ -27,7 +27,8 @@ exports.authenticate = async (req, res, next) => {
     let userFound;
 
     try {
-        userFound = await User.findOne({ email: login.email }).populate(populateCharacter);
+        userFound = await User.findOne({ email: login.email })
+            .populate(populateCharacter);
         if (userFound !== null) {
             if (bcrypt.compareSync(login.password, userFound.password)) {
                 const token = jwt.sign(
